@@ -40,7 +40,7 @@ pipeline {
     OUTPUT_DIR_RELATIVE_JDK11_HADOOP3 = 'output-jdk11-hadoop3'
 
     PROJECT = 'hbase'
-    PROJECT_PERSONALITY = 'https://raw.githubusercontent.com/apache/hbase/master/dev-support/hbase-personality.sh'
+    PROJECT_PERSONALITY = 'https://raw.githubusercontent.com/apache/hbase/HBASE-26995/dev-support/hbase-personality.sh'
     PERSONALITY_FILE = 'tools/personality.sh'
     // This section of the docs tells folks not to use the javadoc tag. older branches have our old version of the check for said tag.
     AUTHOR_IGNORE_LIST = 'src/main/asciidoc/_chapters/developer.adoc,dev-support/test-patch.sh'
@@ -412,6 +412,9 @@ pipeline {
               label 'hbase'
             }
           }
+          when {
+            branch 'branch-1*'
+          }
           environment {
             BASEDIR = "${env.WORKSPACE}/component"
             TESTS = "${env.DEEP_CHECKS}"
@@ -520,9 +523,7 @@ pipeline {
             }
           }
           when {
-            not {
-              branch 'branch-1*'
-            }
+            branch 'branch-1*'
           }
           environment {
             BASEDIR = "${env.WORKSPACE}/component"
@@ -634,9 +635,7 @@ pipeline {
             }
           }
           when {
-            not {
-              branch 'branch-1*'
-            }
+            branch 'branch-1*'
           }
           environment {
             BASEDIR = "${env.WORKSPACE}/component"
@@ -751,6 +750,9 @@ pipeline {
             maven 'maven_latest'
             // this needs to be set to the jdk that ought to be used to build releases on the branch the Jenkinsfile is stored in.
             jdk "jdk_1.8_latest"
+          }
+          when {
+            branch 'branch-1*'
           }
           environment {
             BASEDIR = "${env.WORKSPACE}/component"
