@@ -393,10 +393,13 @@ function refguide_filefilter
 {
   local filename=$1
 
-  if [[ ${filename} =~ src/main/asciidoc ]] ||
-     [[ ${filename} =~ src/main/xslt ]] ||
-     [[ ${filename} =~ hbase-common/src/main/resources/hbase-default\.xml ]]; then
-    add_test refguide
+  # we only generate ref guide on master branch now
+  if [[ "${PATCH_BRANCH}" = master ]]; then
+    if [[ ${filename} =~ src/main/asciidoc ]] ||
+       [[ ${filename} =~ src/main/xslt ]] ||
+       [[ ${filename} =~ hbase-common/src/main/resources/hbase-default\.xml ]]; then
+      add_test refguide
+    fi
   fi
 }
 
@@ -407,6 +410,10 @@ function refguide_rebuild
   declare -i count
   declare pdf_output
 
+  if [[ "${PATCH_BRANCH}" -ne "master" ]]; then
+    yetus_debug "skip checking ref guide for branch ${PATCH_BRANCH}"
+    return 0
+  fi
   if ! verify_needed_test refguide; then
     return 0
   fi
